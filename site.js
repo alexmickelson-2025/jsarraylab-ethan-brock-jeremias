@@ -4,13 +4,68 @@ const buildHeader = () => {
 function buildAnimalCard(animal) {
   return `${animal.title} <br> <img src=" ${animal.imageLocation} "  alt=" ${animal.alt} "> <br>  ${animal.description} <br> <br>`;
 }
+
+function getQueryParameters() {
+  const queryString = window.location.search.substring(1);
+  const params = [];
+  const pairs = queryString.split("&");
+  for (let i = 0; i < pairs.length; i++) {
+    const [key, value] = pairs[i].split("=");
+    if (key) {
+      params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+    }
+  }
+  return params;
+}
 function buildMain() {
-  console.log(window.location.search.split("&")[1]);
-  const mainContent =
-    `<article class="card-container">` +
-    animals.map((animal) => buildAnimalCard(animal)).join("") +
-    `</article>`;
+  const params = getQueryParameters();
+  const offset = parseInt(params.offset, 10);
+  const count = parseInt(params.count, 10);
+  let error = "";
+  if (isNaN(offset) && isNaN(count)) {
+    error = "Error: Missing both offset and count.";
+  } else if (isNaN(offset)) {
+    error = "Error: Missing offset.";
+  } else if (isNaN(count)) {
+    error = "Error: Missing count.";
+  } else if (offset < 0) {
+    error = "Error: Offset cannot be negative.";
+  } else if (offset + count > animals.length) {
+    error = "Error: Offset and count are too large.";
+  }
+
+  if (error) {
+    return `<main><p class="error">${error}</p></main>`;
+  }
+
+   if (isNaN(offset) && isNaN(count)) {
+    error = "Error: Missing both offset and count.";
+  } else if (isNaN(offset)) {
+    error = "Error: Missing offset.";
+  } else if (isNaN(count)) {
+    error = "Error: Missing count.";
+  } else if (offset < 0) {
+    error = "Error: Offset cannot be negative.";
+  } else if (offset + count > animals.length) {
+    error = "Error: Offset and count are too large.";
+  }
+
+  if (error) {
+    return `<main><p class="error">${error}</p></main>`;
+  }
+
+  let mainContent = `<main><article class="card-container">`;
+  for (let i = offset; i < offset + count; i++) {
+    mainContent += buildAnimalCard(animals[i]);
+  }
+  mainContent += `</article></main>`;
   return mainContent;
+
+  // const mainContent =
+  //   `<article class="card-container">` +
+  //   animals.map((animal) => buildAnimalCard(animal)).join("") +
+  //   `</article>`;
+  // return mainContent;
 }
 function leftNav() {
   return "<nav> <ul> <li>Home</li> <li>Page 1</li> <li>Page 2</li> </ul> </nav>";
