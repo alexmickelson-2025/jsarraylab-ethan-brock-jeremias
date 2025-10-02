@@ -2,7 +2,14 @@ const buildHeader = () => {
   return `<header> <a href="#">Logo</a> </header>`;
 };
 function buildAnimalCard(animal) {
-  return `${animal.title} <br> <img src=" ${animal.imageLocation} "  alt=" ${animal.alt} "> <br>  ${animal.description} <br> <br>`;
+  return `
+    <div class="card">
+      <img src="${animal.imageLocation}" alt="${animal.alt}">
+      <div class="card-text">
+        <h2>${animal.title}</h2>
+        <p>${animal.description}</p>
+      </div>
+    </div>`;
 }
 
 function getQueryParameters() {
@@ -38,7 +45,7 @@ function buildMain() {
     return `<main><p class="error">${error}</p></main>`;
   }
 
-   if (isNaN(offset) && isNaN(count)) {
+  if (isNaN(offset) && isNaN(count)) {
     error = "Error: Missing both offset and count.";
   } else if (isNaN(offset)) {
     error = "Error: Missing offset.";
@@ -79,7 +86,16 @@ const buildSiteLayout = () => {
   const body = buildMain();
   const footer = buildFooter();
   const Nav = leftNav();
-  return `${header} ${body} ${Nav} ${footer}`;
+  return `
+    ${header}
+    <div id="page-container">
+      ${Nav}
+      <div class="main-container">
+        ${body}
+      </div>
+    </div>
+    ${footer}
+  `;
 };
 const animals = [
   {
